@@ -1,0 +1,105 @@
+
+
+print("===============================================")
+print("      DAILY CALORIE TRACKER - PYTHON CLI")
+print("===============================================")
+print("This tool helps you record your meals, calculate")
+print("daily calorie consumption, compare limits, and")
+print("optionally save your session log.\n")
+
+# ----------------------------------------------
+# Ask number of meals
+# ----------------------------------------------
+meal_count = int(input("How many meals do you want to enter today? "))
+
+meal_names = []
+meal_calories = []
+
+print("\n--- Enter Meal Details ---")
+
+# ----------------------------------------------
+# Collect meal names and calories
+# ----------------------------------------------
+i = 0
+while i < meal_count:
+    name = input("Meal " + str(i + 1) + " name: ")
+    cal = float(input("Calories for " + name + ": "))
+    
+    meal_names.append(name)
+    meal_calories.append(cal)
+
+    i = i + 1
+
+# ----------------------------------------------
+# Calculations
+# ----------------------------------------------
+total_cal = 0
+j = 0
+while j < meal_count:
+    total_cal = total_cal + meal_calories[j]
+    j = j + 1
+
+avg_cal = total_cal / meal_count
+
+daily_limit = float(input("\nEnter your daily calorie limit: "))
+
+# ----------------------------------------------
+# Limit Status
+# ----------------------------------------------
+if total_cal > daily_limit:
+    limit_status = "WARNING: You exceeded your daily calorie limit!"
+else:
+    limit_status = "OK: You are within the daily calorie limit."
+
+# ----------------------------------------------
+# Summary Report
+# ----------------------------------------------
+print("\n===============================================")
+print("              CALORIE SUMMARY REPORT")
+print("===============================================")
+
+print("Meal Name\tCalories")
+print("-----------------------------------------------")
+
+k = 0
+while k < meal_count:
+    print(meal_names[k] + "\t\t" + str(meal_calories[k]))
+    k = k + 1
+
+print("-----------------------------------------------")
+print("Total:\t\t" + str(total_cal))
+print("Average:\t" + str(round(avg_cal, 2)))
+print("-----------------------------------------------")
+print(limit_status)
+print("===============================================\n")
+
+# ----------------------------------------------
+# Save to File (NO import)
+# ----------------------------------------------
+choice = input("Do you want to save this report to a file? (yes/no): ")
+
+if choice.lower() == "yes":
+    filename = "calorie_log.txt"
+
+    f = open(filename, "w", encoding="utf-8")
+    f.write("====== DAILY CALORIE TRACKER LOG ======\n\n")
+    f.write("Meal Name\tCalories\n")
+    f.write("---------------------------------------\n")
+
+    x = 0
+    while x < meal_count:
+        f.write(meal_names[x] + "\t\t" + str(meal_calories[x]) + "\n")
+        x = x + 1
+
+    f.write("---------------------------------------\n")
+    f.write("Total Calories: " + str(total_cal) + "\n")
+    f.write("Average Calories: " + str(round(avg_cal, 2)) + "\n")
+    f.write("Daily Limit: " + str(daily_limit) + "\n")
+    f.write("Status: " + limit_status + "\n")
+    f.write("=======================================\n")
+    f.close()
+
+    print("\nReport saved as calorie_log.txt.")
+else:
+    print("\nReport not saved. Session complete.")
+
