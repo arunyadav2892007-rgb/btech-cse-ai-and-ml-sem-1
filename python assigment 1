@@ -72,7 +72,7 @@ print(limit_status)
 print("===============================================\n")
 
 # ----------------------------------------------
-# Save to File (NO import)
+# Save to File 
 # ----------------------------------------------
 choice = input("Do you want to save this report to a file? (yes/no): ")
 
