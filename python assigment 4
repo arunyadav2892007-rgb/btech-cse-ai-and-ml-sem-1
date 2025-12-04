@@ -1,0 +1,125 @@
+# WEATHER DATA VISUALIZER PROJECT
+# Name: <Your Name>
+# Course: Programming for Problem Solving (Python)
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# -----------------------------
+# TASK 1: DATA LOADING
+# -----------------------------
+
+df = pd.read_csv("weather_data.csv")
+
+print(df.head())
+print(df.info())
+print(df.describe())
+
+# -----------------------------
+# TASK 2: DATA CLEANING
+# -----------------------------
+
+df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+
+df.fillna(df.mean(numeric_only=True), inplace=True)
+
+df = df[['Date', 'Temperature', 'Rainfall', 'Humidity']]
+
+df.to_csv("cleaned_weather_data.csv", index=False)
+
+# -----------------------------
+# TASK 3: STATISTICAL ANALYSIS
+# -----------------------------
+
+daily_mean = df['Temperature'].mean()
+daily_max = df['Temperature'].max()
+daily_min = df['Temperature'].min()
+daily_std = df['Temperature'].std()
+
+print("\nTemperature Statistics:")
+print("Mean:", daily_mean)
+print("Max:", daily_max)
+print("Min:", daily_min)
+print("Standard Deviation:", daily_std)
+
+df.set_index('Date', inplace=True)
+
+monthly_stats = df.resample('M').agg({
+    'Temperature': ['mean', 'min', 'max'],
+    'Rainfall': 'sum',
+    'Humidity': 'mean'
+})
+
+print(monthly_stats)
+
+# -----------------------------
+# TASK 4: VISUALIZATION
+# -----------------------------
+
+# Line plot
+plt.figure()
+plt.plot(df.index, df['Temperature'])
+plt.title("Daily Temperature Trend")
+plt.xlabel("Date")
+plt.ylabel("Temperature")
+plt.tight_layout()
+plt.savefig("daily_temperature.png")
+plt.close()
+
+# Monthly Rainfall bar chart
+monthly_rain = df['Rainfall'].resample('M').sum()
+
+plt.figure()
+monthly_rain.plot(kind='bar')
+plt.title("Monthly Rainfall")
+plt.xlabel("Month")
+plt.ylabel("Rainfall (mm)")
+plt.tight_layout()
+plt.savefig("monthly_rainfall.png")
+plt.close()
+
+# Scatter plot: Humidity vs Temp
+plt.figure()
+plt.scatter(df['Temperature'], df['Humidity'])
+plt.title("Humidity vs Temperature")
+plt.xlabel("Temperature")
+plt.ylabel("Humidity")
+plt.tight_layout()
+plt.savefig("humidity_vs_temperature.png")
+plt.close()
+
+# Combined plot (2 series)
+plt.figure()
+plt.plot(df.index, df['Temperature'], label="Temperature")
+plt.plot(df.index, df['Humidity'], label="Humidity")
+plt.legend()
+plt.title("Temperature and Humidity Combined")
+plt.tight_layout()
+plt.savefig("combined_plot.png")
+plt.close()
+
+# -----------------------------
+# TASK 5: GROUPING
+# -----------------------------
+
+df['Month'] = df.index.month
+grouped = df.groupby('Month').mean()
+
+print("\nMonthly Averages:")
+print(grouped)
+
+# -----------------------------
+# TASK 6: STORYTELLING REPORT
+# -----------------------------
+
+with open("weather_report.txt", "w") as f:
+    f.write("WEATHER DATA ANALYSIS REPORT\n\n")
+    f.write("Temperature Statistics:\n")
+    f.write(f"Mean: {daily_mean}\n")
+    f.write(f"Max: {daily_max}\n")
+    f.write(f"Min: {daily_min}\n\n")
+    f.write("Monthly patterns observed.\n")
+    f.write("Plots generated successfully.\n")
+
+print("All files generated successfully!")
